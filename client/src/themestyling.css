@@ -59,6 +59,7 @@
     --rt-h4-bg:rgb(250, 236, 198);
     --rt-div1-bg:hsl(43,85%,95%);
     --rt-border:rgb(244, 210, 123);
+    --widget-border:hsl(43,50%,39%);
     --widget-tags-h4-bg:rgb(249, 250, 250);
     --widget-tags-h4-border:hsl(210,8%,90%);
     --stack-orange: var(--yellow-500);
@@ -88,6 +89,7 @@
     --rt-h4-bg:var(--yellow-200);
     --rt-div1-bg:var(--yellow-100);
     --rt-border:rgb(149, 121, 50);
+    --widget-border:hsl(43,50%,39%);
     --widget-tags-h4-bg:var(--yellow-200);
     --widget-tags-h4-border:var(var(--yellow-300));
     --stack-orange: var(--orange-400);

@@ -21,7 +21,7 @@
 .right-sidebar-div-1{
     background-color:var(--rt-div1-bg);
     padding: 13px;
-    border: solid 1px var(--border); 
+    border: solid 1px var(--widget-border); 
     font-size: 11px;
 }
     
