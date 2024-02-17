@@ -1,37 +1,37 @@
-**Chandu's Overflow**
+StackOverflow-Clone
 
-**Overview:**
-Chandu's Overflow is a vibrant and user-friendly question forum inspired by Stack Overflow. With a sleek design and powerful features, it empowers users to ask questions, share knowledge, and collaborate with a global community of developers.
+Overview:
+StackOverflow-Clone is a simplified version of the renowned question forum, Stack Overflow. With a focus on reducing code redundancy and optimizing styling through the use of shared classes and variables, StackOverflow-Clone offers an intuitive user experience while facilitating easy theme changes.
 
-**Technologies Used:**
-- React.js
-- Node.js
-- Express.js
-- MongoDB
-- Redux
-- JSON Web Token
-- Font Awesome Icons
-- And more!
+Technologies Used:
 
-**How to Use:**
-To get started with Chandu's Overflow, follow these simple steps:
-1. Install Node.js
-2. Fork and clone the repository
-3. Navigate to the client and server directories in your preferred code editor
-4. Install dependencies using the command `npm install`
-5. Start the application with `npm start`
+React.js
+Node.js
+Express.js
+MongoDB
+Redux
+JSON Web Token
+Font Awesome Icons
+And more!
+How to Use:
+To begin using StackOverflow-Clone:
 
-**Features:**
-- **User Authentication:** Secure user authentication with JSON Web Token.
-- **Question Forum:** A platform for users to ask questions, seek answers, and share knowledge.
-- **Contribution:** Open for contributions from the community. Contributors will be credited.
-- **Sleek Design:** A visually appealing interface that enhances user experience.
-- **Responsive:** Fully responsive design, ensuring seamless usage across devices.
-- **Customizable:** Easily customizable to fit your specific requirements or preferences.
+Install Node.js
+Fork and clone the repository
+Navigate to the client and server directories in your preferred code editor
+Install dependencies using the command npm install
+Start the application with npm start
+Features:
+
+User Authentication: Secure user authentication with JSON Web Token.
+Question Forum: A platform for users to ask questions, seek answers, and share knowledge.
+Contribution: Open for contributions from the community. Contributors will be credited.
+Dynamic Theming: Easily change the theme by modifying color variables, ensuring consistent styling throughout the application.
 
 **Screenshots:**
-<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/7f611e78-59bd-4c29-9238-f4a7ad314353">
-<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/61f45748-5e7a-40d0-ad69-6dba5a897966">
+<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/bbebecb0-ec6c-4a85-a1e2-5650e6faf294">
+<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/05904c40-1a0f-475a-9b37-fee98f133985">
+
 
 **Live Link:**
 [live site](https://stackoverflow-frontend-85zb.onrender.com/ )
