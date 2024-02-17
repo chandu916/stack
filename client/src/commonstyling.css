@@ -23,3 +23,8 @@
 .cmn-btn:hover{
     background-color: var(--blue-500);
 }
+.icons{
+    fill: var(--font-clr);
+    width:16px;
+    height:18px;
+}

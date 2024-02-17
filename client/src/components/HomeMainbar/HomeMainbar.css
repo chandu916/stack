@@ -56,13 +56,14 @@
 }
 .question-title-link{
     text-decoration: none;   
-    color: var(--blue-font);   
+    color: var(--qs-clr);   
     transition: 0.3s;   
     font-weight: 400; 
     font-size: 17px;
+    font-weight: 500;
 }  
 .question-title-link:hover{  
-    color: #009dff;
+    color: var(--qs-hvr);
 }
 .display-question-details p{ 
     padding: 4px;    

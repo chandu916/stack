@@ -63,7 +63,7 @@
     --widget-tags-h4-border:hsl(210,8%,90%);
     --stack-orange: var(--yellow-500);
     --orange-border: hsl(43,85%,72%);;
-    --border:var(--black-250);
+    --border:hsl(210,8%,85%);
     --font-clr : var(--black-100);
     --btn-hvr:var(--blue-500);
     --cmn-btn-bg:var(--blue-400);
@@ -72,7 +72,10 @@
     --tag-hvr:rgb(214, 232, 250);
     --tag-hvr-clr:rgb(12, 59, 106);
     --nav-hvr:hsl(210,8%,98%);;
-    --nav-active-bg:hsl(210,8%,95%);;
+    --nav-active-bg:hsl(210,8%,95%);
+
+    --qs-clr:rgb(27, 117, 208);
+    --qs-hvr:rgb(21, 92, 162);
 }
 
 
@@ -98,4 +101,9 @@
     --tag-hvr:var(--blue-200);
     --tag-hvr-clr:rgb(216, 235, 253);
     --nav-hvr:var(--black-100);
-    --nav-active-bg:var(--black-200);}
+    --nav-active-bg:var(--black-200);
+
+    --qs-clr:rgb(144, 196, 249);
+    --qs-hvr:rgb(178, 214, 251);
+
+}
