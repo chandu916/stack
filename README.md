@@ -34,7 +34,7 @@ To get started with Chandu's Overflow, follow these simple steps:
 <img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/61f45748-5e7a-40d0-ad69-6dba5a897966">
 
 **Live Link:**
-<a href=" 'https://stackoverflow-frontend-85zb.onrender.com/ "></a>'
+<a href=" 'https://stackoverflow-frontend-85zb.onrender.com/ "> live site </a>
 
 **Contributions:**
 Contributions are always welcome! Whether you're fixing a bug, adding a feature, or enhancing the design, your contributions are appreciated.
