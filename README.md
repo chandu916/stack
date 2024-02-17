@@ -39,10 +39,4 @@ Dynamic Theming: Easily change the theme by modifying color variables, ensuring 
 **Contributions:**
 Contributions are always welcome! Whether you're fixing a bug, adding a feature, or enhancing the design, your contributions are appreciated.
 
-**Credits:**
-Chandu's Overflow utilizes icons from Font Awesome.
-
-**Reminder for Null Class Students:**
-If you're a Null Class student, the repository has been updated. If you need access to the old repository, you can check out the designated branch.
-
 **Made with ❤️ by Chandu**
