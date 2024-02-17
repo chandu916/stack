@@ -1,10 +1,7 @@
 import React from 'react'
 import './LeftSidebar.css'
 import { NavLink } from 'react-router-dom'
-import Globe from '../../assets/Globe.svg'
-import user from '../../assets/user.svg'
-import tags from '../../assets/tags.svg'
-import save from '../../assets/save.svg'
+
 const LeftSidebar = () => {
     
   return (

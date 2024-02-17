@@ -1,8 +1,5 @@
 import React from 'react'
 import './RightSidebar.css'
-import message from '../../assets/message.svg'
-import pen from '../../assets/pen.svg'
-import blacklogo from '../../assets/black-logo.svg'
 
 const Widget = () => {
   return (
