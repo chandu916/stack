@@ -2,14 +2,41 @@ import Questions from '../models/Questions.js'
 import mongoose from 'mongoose'
 
 export const AskQuestion = async (req , res) =>{
-    const postQuestionData = req.body;
-    const postQuestion = new Questions(postQuestionData)
+    const { questionTitle, questionBody, questionTags, userPosted, userId } = req.body;
+
+    if (!req.userId) {
+      return res.status(401).json({ message: 'Authentication required to post a question' });
+    }
+
+    if (!questionTitle || !questionBody || !questionTags || !userPosted) {
+      return res.status(400).json({ message: 'Please provide title, body, tags, and author for the question' });
+    }
+
+    const tagsArray = Array.isArray(questionTags)
+      ? questionTags.filter((tag) => typeof tag === 'string' && tag.trim())
+      : typeof questionTags === 'string'
+        ? questionTags.split(/[ ,]+/).filter((tag) => tag.trim())
+        : [];
+
+    if (tagsArray.length === 0) {
+      return res.status(400).json({ message: 'Please provide at least one valid tag' });
+    }
+
+    const postQuestionData = {
+      questionTitle: questionTitle.trim(),
+      questionBody: questionBody.trim(),
+      questionTags: tagsArray,
+      userPosted: userPosted.trim(),
+      userId: userId || req.userId,
+    };
+
+    const postQuestion = new Questions(postQuestionData);
     try {
         await postQuestion.save();
-        res.status(200).json('Posted question successfully')
+        res.status(201).json({ message: 'Posted question successfully' });
     } catch (error) {
-        console.log(error)
-        res.status(409).json("Couldn't post a question")
+        console.log(error);
+        res.status(500).json({ message: error.message || "Couldn't post a question" });
     }
 }
 export const getAllQuestions = async (req , res ) =>{

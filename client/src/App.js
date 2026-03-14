@@ -24,13 +24,26 @@ function App() {
       setSlideIn(false);
     }
   }, []);
-  useEffect(() => {
-    setIsDarkTheme(false); }, []);
 
   useEffect(() => {
-    const currentTime = new Date().getHours();
-    setIsDarkTheme(currentTime < 6 || currentTime >= 18);
+    const savedTheme = localStorage.getItem('site-theme');
+    if (savedTheme === 'dark') {
+      setIsDarkTheme(true);
+    } else if (savedTheme === 'light') {
+      setIsDarkTheme(false);
+    } else {
+      const currentTime = new Date().getHours();
+      setIsDarkTheme(currentTime < 6 || currentTime >= 18);
+    }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('site-theme', isDarkTheme ? 'dark' : 'light');
+  }, [isDarkTheme]);
+
+  const toggleTheme = () => {
+    setIsDarkTheme((prev) => !prev);
+  };
 
   const handleSlideIn = () => {
     if (window.innerWidth <= 760) {
@@ -42,7 +55,12 @@ function App() {
     <div className={`App ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
       <Router>
         <Navbar handleSlideIn={handleSlideIn} />
-        <AllRoutes slideIn={slideIn} handleSlideIn={handleSlideIn} />
+        <AllRoutes
+          slideIn={slideIn}
+          handleSlideIn={handleSlideIn}
+          isDarkTheme={isDarkTheme}
+          toggleTheme={toggleTheme}
+        />
       </Router>
     </div>
   );

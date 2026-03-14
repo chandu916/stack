@@ -12,12 +12,52 @@ const User = useSelector((state) => state.currentUserReducer);
     const [questionTitle, setQuestionTitle] = useState('')
     const [questionBody, setQuestionBody] = useState('')
     const [questionTags, setQuestionTags] = useState('')
-   
-    const handleSumit = (e) =>{
+    const [error, setError] = useState('')
+
+    const handleSumit = async (e) =>{
         e.preventDefault()
-        console.log(User)
-        console.log({ questionTitle, questionBody ,questionTags })
-        dispatch(askQuestion({ questionTitle, questionBody,questionTags, userPosted: User.result.name, userId:User?.result._id  },navigate))
+        setError('')
+
+        if (!User?.result?._id) {
+          setError('Please login before posting a question.')
+          return
+        }
+
+        const title = questionTitle.trim()
+        const body = questionBody.trim()
+        const tagsStr = questionTags.trim()
+
+        if (!title || !body || !tagsStr) {
+          setError('Title, body and tags are required.')
+          return
+        }
+
+        if (body.length < 20) {
+          setError('Question body must be at least 20 characters.')
+          return
+        }
+
+        const tags = tagsStr.split(/[ ,]+/).filter((tag) => tag)
+        if (tags.length === 0) {
+          setError('Please add at least one valid tag.')
+          return
+        }
+
+        try {
+          await dispatch(askQuestion(
+            {
+              questionTitle: title,
+              questionBody: body,
+              questionTags: tags,
+              userPosted: User.result.name,
+              userId: User.result._id
+            },
+            navigate
+          ))
+        } catch (err) {
+          setError(err?.response?.data?.message || 'Unable to post question. Please try again.')
+          console.error(err)
+        }
     }
     const handleEnter = (e) => {
         if(e.key === 'Enter'){
@@ -28,6 +68,7 @@ const User = useSelector((state) => state.currentUserReducer);
     <div className='ask-question'>
         <div className="ask-ques-container">
             <h1>Ask a Public Question</h1>
+            {error && <div className='ask-error' style={{color:'red', marginBottom:'12px'}}>{error}</div>}
             <form onSubmit={handleSumit} >
                 <div className='ask-form-container'>
                     <label htmlFor="ask-ques-title">
@@ -43,7 +84,7 @@ const User = useSelector((state) => state.currentUserReducer);
                     <label htmlFor="ask-ques-tags">
                         <h4> Tags</h4>
                         <p> Add up to 5 tags to describe what your question is about. Start typing to see suggestions.</p>
-                        <input type="text" id='ask-ques-tags' onChange={(e) => {setQuestionTags(e.target.value.split(" "))}} placeholder='e.g. windows ,ruby etc ..'/>
+                        <input type="text" id='ask-ques-tags' onChange={(e) => {setQuestionTags(e.target.value)}} value={questionTags} placeholder='e.g. windows ,ruby etc ..'/>
                     </label>
                 </div>
                 <input type="submit" value='review your question' className='review-btn'/>

@@ -10,7 +10,7 @@ import ProfileBio from "./ProfileBio";
 import LoginHistory from "./LoginHistory";
 import "./UsersProfile.css";
 
-const UserProfile = ({ slideIn, handleSlideIn }) => {
+const UserProfile = ({ slideIn, handleSlideIn, isDarkTheme, toggleTheme }) => {
   const { id } = useParams();
   const users = useSelector((state) => state.usersReducer);
   const currentProfile = users.filter((user) => user._id === id)[0];
@@ -61,8 +61,14 @@ const UserProfile = ({ slideIn, handleSlideIn }) => {
                  </button>
               )}
               {currentUser?.result._id === id && (
-                <button onClick={() => setSwitch('theme')} className="nav-items nav-btn">
-                   theme
+                <button
+                  onClick={() => {
+                    toggleTheme();
+                    setSwitch('theme');
+                  }}
+                  className="nav-items nav-btn"
+                >
+                   Theme: {isDarkTheme ? 'Dark' : 'Light'}
                 </button>
               )}
             </div>
@@ -78,6 +84,11 @@ const UserProfile = ({ slideIn, handleSlideIn }) => {
             
             {Switch === "loginHistory" && (
               <LoginHistory />
+            )}
+            {Switch === "theme" && (
+              <div className="theme-info" style={{ marginTop: '16px', color: isDarkTheme ? 'white' : 'black' }}>
+                Theme switched to {isDarkTheme ? 'Dark' : 'Light'} mode.
+              </div>
             )}
             </>
         </section>

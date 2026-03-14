@@ -9,7 +9,7 @@ import Tags from './pages/Tags/Tags'
 import Users from './pages/Users/Users'
 import UserProfile from './pages/UserProfile/UserProfile'
 
-const AllRoutes = () => {
+const AllRoutes = ({ isDarkTheme, toggleTheme, slideIn, handleSlideIn }) => {
   return (
     <Routes>
         <Route path='/' element={<Home/>}/>
@@ -19,7 +19,15 @@ const AllRoutes = () => {
         <Route path='/Questions/:id' element={<DisplayQuestion/>}/>
         <Route path="/Tags" element={<Tags/>}/>
         <Route path="/Users" element={<Users/>}/>
-        <Route path="/Users/:id" element={<UserProfile />}/>
+        <Route
+          path="/Users/:id"
+          element={<UserProfile
+            isDarkTheme={isDarkTheme}
+            toggleTheme={toggleTheme}
+            slideIn={slideIn}
+            handleSlideIn={handleSlideIn}
+          />}
+        />
     </Routes>
   );
 }
