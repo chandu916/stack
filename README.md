@@ -1,42 +1,121 @@
-StackOverflow-Clone
+# StackOverflow-Clone
 
-Overview:
-StackOverflow-Clone is a simplified version of the renowned question forum, Stack Overflow. With a focus on reducing code redundancy and optimizing styling through the use of shared classes and variables, StackOverflow-Clone offers an intuitive user experience while facilitating easy theme changes.
+![StackOverflow-Clone](https://raw.githubusercontent.com/chandu916/stack/main/screenshot.png)
 
-Technologies Used:
+## 🔍 Overview
 
-React.js
-Node.js
-Express.js
-MongoDB
-Redux
-JSON Web Token
-Font Awesome Icons
-And more!
-How to Use:
-To begin using StackOverflow-Clone:
+A full-stack clone of StackOverflow built with React/Redux + Node/Express + MongoDB. This project supports auth, question/answer flow, profile editing, votes, and custom theming.
 
-Install Node.js
-Fork and clone the repository
-Navigate to the client and server directories in your preferred code editor
-Install dependencies using the command npm install
-Start the application with npm start
-Features:
+## 🚀 Key Features
 
-User Authentication: Secure user authentication with JSON Web Token.
-Question Forum: A platform for users to ask questions, seek answers, and share knowledge.
-Contribution: Open for contributions from the community. Contributors will be credited.
-Dynamic Theming: Easily change the theme by modifying color variables, ensuring consistent styling throughout the application.
+- Email/password authentication (JWT)
+- Ask, answer, edit, delete questions
+- Upvote/downvote and question tags
+- User profile (bio, tags, login history, edit details)
+- Light/dark theme toggle with persistence
+- API error handling and client-side error boundary
 
-**Screenshots:**
-<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/bbebecb0-ec6c-4a85-a1e2-5650e6faf294">
-<img width="1470" alt="image" src="https://github.com/chandu916/stack/assets/60317141/05904c40-1a0f-475a-9b37-fee98f133985">
+## 🧩 Tech Stack
 
+- Frontend: React, Redux, React Router, Axios, Moment.js
+- Backend: Node.js, Express, MongoDB, Mongoose
+- Auth: JSON Web Token (JWT)
+- Dev tools: npm, create-react-app
 
-**Live Link:**
-[live site](https://stackoverflow-frontend-85zb.onrender.com/ )
+## 📦 Repository Structure
 
-**Contributions:**
-Contributions are always welcome! Whether you're fixing a bug, adding a feature, or enhancing the design, your contributions are appreciated.
+```
+client/           # React frontend
+server/           # Express API server
+  models/         # Mongoose models
+  controllers/    # Route handlers
+  routes/         # API endpoint definitions
+  middlewares/    # auth middleware
+```
 
-**Made with ❤️ by Chandu**
+## ⚙️ Local Setup
+
+### 1. Clone
+
+```bash
+git clone https://github.com/chandu916/stack.git
+cd stack
+```
+
+### 2. Server setup
+
+```bash
+cd server
+npm install
+```
+
+Create `.env` file in `server/`:
+
+```
+PORT=5000
+CONNECTION_URL=<your_mongo_connection_string>
+JWT_SECRET=<your_secret_key>
+```
+
+Start server:
+
+```bash
+npm run dev
+# or
+npm start
+```
+
+### 3. Client setup
+
+```bash
+cd ../client
+npm install
+npm start
+```
+
+Open: `http://localhost:3000`
+
+## 🧪 Testing Build
+
+```bash
+cd client
+npm run build
+```
+
+## 🔒 API Behavior (500/400/404 handling)
+
+- Server returns JSON `{ code, message }` for errors
+- 404 for unknown endpoints
+- Global server error middleware for uniform responses
+- Client API interceptors log request/response lifecycle
+
+## 📌 Usage
+
+1. Sign up/login.
+2. Visit Home to view questions.
+3. Ask a question with title/body/tags.
+4. Vote, answer, delete your contents.
+5. Visit profile to edit details or view login history.
+6. Toggle theme in user profile or app bar.
+
+## 🌐 Live Demo
+
+[Frontend](https://stackoverflow-frontend-85zb.onrender.com/)
+
+## 🤝 Contributing
+
+1. Fork repository
+2. Create feature branch
+3. Commit and push
+4. Open PR with description
+
+## 🛠️ Notes for Maintainers
+
+- **API base URL**: `https://stack-overflow-o8mf.onrender.com/`
+- **Redux actions** now include structured logging and error capture
+- **`ErrorBoundary`** in `client/src/components/ErrorBoundary/ErrorBoundary.jsx`
+- **`useSafeCallback`** in `client/src/utils/useSafeCallback.js`
+
+## ✨ Author
+
+Made with ❤️ by Chandu

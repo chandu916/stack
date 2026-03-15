@@ -1,18 +1,40 @@
 import axios from 'axios'
 
-const API = axios.create({baseURL: 'https://stack-overflow-o8mf.onrender.com/'});
+const API = axios.create({ baseURL: 'https://stack-overflow-o8mf.onrender.com/' });
 
-API.interceptors.request.use((req) => {
-    if (localStorage.getItem("Profile")) {
-      req.headers.authorization = `Bearer ${
-        JSON.parse(localStorage.getItem("Profile")).token
-      }`;
+API.interceptors.request.use(
+  (req) => {
+    if (localStorage.getItem('Profile')) {
+      req.headers.authorization = `Bearer ${JSON.parse(localStorage.getItem('Profile')).token}`;
     }
+    console.info('[API Request]', req.method.toUpperCase(), req.url, req.data || '');
     return req;
-  });
-  
-export const login =(authData)=> API.post('/user/login', authData)
-export const signup =(authData)=> API.post('/user/signup', authData)
+  },
+  (error) => {
+    console.error('[API Request Error]', error);
+    return Promise.reject(error);
+  }
+);
+
+API.interceptors.response.use(
+  (res) => {
+    console.info('[API Response]', res.status, res.config.url, res.data);
+    return res;
+  },
+  (error) => {
+    if (error.response) {
+      console.error('[API Response Error]', error.response.status, error.response.config.url, error.response.data);
+    } else if (error.request) {
+      console.error('[API No Response]', error.request);
+    } else {
+      console.error('[API Error]', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const login = (authData) => API.post('/user/login', authData);
+export const signup = (authData) => API.post('/user/signup', authData);
 
 export const postQuestion = (questionData) => API.post('/questions/Ask', questionData)
 export const getAllQuestions = () => API.get('/questions/get')

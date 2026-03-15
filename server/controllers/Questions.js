@@ -44,7 +44,8 @@ export const getAllQuestions = async (req , res ) =>{
         const questionList = await Questions.find();
         res.status(200).json(questionList)
     } catch (error) {
-        res.status(409).json({message:error.message})
+        console.error('getAllQuestions failed:', error);
+        res.status(500).json({ code: 500, message: error.message || 'Failed to fetch questions'});
     }
 }
 export const deleteQuestion = async(req,res) =>{
@@ -57,8 +58,8 @@ export const deleteQuestion = async(req,res) =>{
         await Questions.findByIdAndDelete(_id);
         res.status(200).json({message:"sucessfully deleted..."})
     } catch (error) {
-        res.status(404).json({ message : error.message})
-        
+        console.error('deleteQuestion failed:', error);
+        res.status(500).json({ code: 500, message: error.message || 'Failed to delete question' });
     }
 }
 
@@ -97,8 +98,8 @@ export const voteQuestion = async(req,res) =>{
             await Questions.findByIdAndUpdate( _id, question)
             res.status(200).json({message:"voted sucesssfulyy"})
      } catch (error) {
-         res.status(404).json({ message : error.message})
-         
+         console.error('voteQuestion failed:', error);
+         res.status(500).json({ code: 500, message: error.message || 'Failed to vote question' });
      }
  }
 

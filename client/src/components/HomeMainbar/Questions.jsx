@@ -26,7 +26,7 @@ const Questions = ({question}) => {
                     }
                 </div>
                    <p className='display-time'>
-                   { question.userPosted} asked {moment(question.askedon).fromNow()}
+                   { question.userPosted} asked {moment(question.askedon).format('MMM-D-YYYY')}
                     </p>
                 </div>
         </div>

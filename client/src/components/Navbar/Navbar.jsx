@@ -60,7 +60,7 @@ const Navbar = ({ handleSlideIn }) => {
           </form>
         </div>
         <div className="navbar-2">
-          {User === null ? (
+          {!User || !User?.result ? (
             <Link to="/Auth" className="nav-items nav-links cmn-btn">
               Log in
             </Link>
@@ -68,7 +68,7 @@ const Navbar = ({ handleSlideIn }) => {
             <>
               <Avatar backgroundColor="#009dff" px="10px" py="7px" borderRadius="50px" color="white">
                 <Link to={`/Users/${User?.result?._id}`} style={{ color: 'white', textDecoration: 'none' }}>
-                  {User.result.name.charAt(0).toUpperCase()}
+                  {User?.result?.name ? User.result.name.charAt(0).toUpperCase() : 'U'}
                 </Link>
               </Avatar>
               <button className="nav-items nav-links" onClick={handleLogout}>

@@ -4,18 +4,47 @@ import { updateProfile } from "../../actions/users";
 
 const EditProfileForm = ({ currentUser, setSwitch }) => {
   const [name, setName] = useState(currentUser?.result?.name);
+  const [email, setEmail] = useState(currentUser?.result?.email);
   const [about, setAbout] = useState(currentUser?.result?.about);
-  const [tags, setTags] = useState([]);
+  const [tags, setTags] = useState(currentUser?.result?.tags || []);
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
-  console.log(tags);
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (tags[0] === "" || tags.length === 0) {
-      alert("Update tags field");
-    } else {
-      dispatch(updateProfile(currentUser?.result?._id, { name, about, tags }));
+    setError('');
+
+    const trimmedName = (name || '').trim();
+    const trimmedEmail = (email || '').trim();
+    const trimmedAbout = (about || '').trim();
+    const tagArray = Array.isArray(tags)
+      ? tags.map((t) => t.trim()).filter(Boolean)
+      : (tags || '').split(/[ ,]+/).map((t) => t.trim()).filter(Boolean);
+
+    if (!trimmedName) {
+      setError('Name is required.');
+      return;
     }
-    setSwitch(false);
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setError('Valid email is required.');
+      return;
+    }
+    if (tagArray.length === 0) {
+      setError('Please add at least one tag.');
+      return;
+    }
+
+    try {
+      await dispatch(updateProfile(currentUser?.result?._id, {
+        name: trimmedName,
+        email: trimmedEmail,
+        about: trimmedAbout,
+        tags: tagArray,
+      }));
+      setSwitch(false);
+    } catch (err) {
+      setError(err?.response?.data?.message || 'Could not update profile.');
+    }
   };
 
   return (
@@ -29,6 +58,14 @@ const EditProfileForm = ({ currentUser, setSwitch }) => {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </label>
+        <label htmlFor="email">
+          <h3>Email</h3>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
         </label>
         <label htmlFor="about">
@@ -51,6 +88,7 @@ const EditProfileForm = ({ currentUser, setSwitch }) => {
           />
         </label>
         <br />
+        {error && <p style={{ color: 'red', margin: '8px 0' }}>{error}</p>}
         <input type="submit" value="Save profile" className="user-submit-btn" />
         <button
           type="button"

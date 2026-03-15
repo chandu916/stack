@@ -16,7 +16,20 @@ dotenv.config()
 });
       app.use('/user', userRoutes);
       app.use('/questions', questionRoutes);
-      app.use('/answer',answerRoutes);
+      app.use('/answer', answerRoutes);
+
+// 404 route for unknown endpoints
+app.use((req, res) => {
+  console.error(`404 Not Found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ code: 404, message: 'Endpoint not found' });
+});
+
+// Global error handler middleware
+app.use((err, req, res, next) => {
+  console.error('Unhandled error in middleware:', err);
+  const status = err.status || 500;
+  res.status(status).json({ code: status, message: err.message || 'Internal Server Error' });
+});
 
 const PORT = process.env.PORT;
 const DATABASE_CONN = process.env.CONNECTION_URL ;

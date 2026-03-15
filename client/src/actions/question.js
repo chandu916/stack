@@ -8,8 +8,10 @@ export const askQuestion = (questionData, navigate) => async (dispatch) => {
         navigate('/')
         return data
     } catch (error) { 
-        console.error('askQuestion error:', error)
-        throw error
+        const statusCode = error?.response?.status || 500;
+        const message = error?.response?.data?.message || error.message || 'Failed to post question';
+        console.error('[QUESTION] askQuestion failed', { statusCode, message, error });
+        throw error;
     }
 }
 
@@ -18,7 +20,9 @@ export const fetchAllQuestions =()=> async (dispatch) =>{
         const {data} = await api.getAllQuestions()
         dispatch({type:'FETCH_ALL_QUESTIONS', payload:data})
     } catch (error) {
-        console.log(error)
+        const statusCode = error?.response?.status || 500;
+        const message = error?.response?.data?.message || error.message || 'Failed to fetch all questions';
+        console.error('[QUESTION] fetchAllQuestions failed', { statusCode, message, error });
     }
 }
 
@@ -28,7 +32,9 @@ export const deleteQuestion = (id, navigate) => async(dispatch) => {
         dispatch(fetchAllQuestions())
         navigate('/')
     } catch (error) {
-        console.log(error)
+        const statusCode = error?.response?.status || 500;
+        const message = error?.response?.data?.message || error.message || 'Failed to delete question';
+        console.error('[QUESTION] deleteQuestion failed', { statusCode, message, error });
     }
 }
 
@@ -37,7 +43,9 @@ export const voteQuestion = (id, value, userId) => async(dispatch)=>{
         await api.voteQuestion(id, value, userId)
         dispatch(fetchAllQuestions())
     } catch (error) {
-        console.log(error)
+        const statusCode = error?.response?.status || 500;
+        const message = error?.response?.data?.message || error.message || 'Failed to vote question';
+        console.error('[QUESTION] voteQuestion failed', { statusCode, message, error });
     }
 }
 
@@ -49,7 +57,9 @@ export const postAnswer = (answerData) => async (dispatch) => {
         dispatch({type:'POST_ANSWER', payload: data})
         dispatch(fetchAllQuestions())  
     } catch (error) {
-        console.log(error) 
+        const statusCode = error?.response?.status || 500;
+        const message = error?.response?.data?.message || error.message || 'Failed to post answer';
+        console.error('[QUESTION] postAnswer failed', { statusCode, message, error });
     }
 }
 
@@ -58,7 +68,9 @@ export const deleteAnswer = (id, answerId, noOfAnswers) => async (dispatch) => {
       await api.deleteAnswer(id, answerId, noOfAnswers);
       dispatch(fetchAllQuestions());
     } catch (error) {
-      console.log(error);
+      const statusCode = error?.response?.status || 500;
+      const message = error?.response?.data?.message || error.message || 'Failed to delete answer';
+      console.error('[QUESTION] deleteAnswer failed', { statusCode, message, error });
     }
   };
 
