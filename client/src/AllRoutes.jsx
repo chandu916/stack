@@ -12,13 +12,13 @@ import UserProfile from './pages/UserProfile/UserProfile'
 const AllRoutes = ({ isDarkTheme, toggleTheme, slideIn, handleSlideIn }) => {
   return (
     <Routes>
-        <Route path='/' element={<Home/>}/>
+        <Route path='/' element={<Home slideIn={slideIn}/>}/>
         <Route path='/Auth' element={<Auth/>}/>
-        <Route path='/Questions' element={<Questions/>}/>
+        <Route path='/Questions' element={<Questions slideIn={slideIn}/>}/>
         <Route path='/AskQuestion' element={<AskQuestion/>}/>
         <Route path='/Questions/:id' element={<DisplayQuestion/>}/>
-        <Route path="/Tags" element={<Tags/>}/>
-        <Route path="/Users" element={<Users/>}/>
+        <Route path="/Tags" element={<Tags slideIn={slideIn}/>}/>
+        <Route path="/Users" element={<Users slideIn={slideIn}/>}/>
         <Route
           path="/Users/:id"
           element={<UserProfile
