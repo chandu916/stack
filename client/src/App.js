@@ -71,6 +71,12 @@ function App() {
     }
   };
 
+  const closeSidebar = () => {
+    if (window.innerWidth <= 760) {
+      setSlideIn(false);
+    }
+  };
+
   return (
     <div className={`App ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
       <ErrorBoundary>
@@ -78,6 +84,7 @@ function App() {
           <Navbar handleSlideIn={handleSlideIn} />
           <AllRoutes
             slideIn={slideIn}
+            onCloseSidebar={closeSidebar}
             handleSlideIn={handleSlideIn}
             isDarkTheme={isDarkTheme}
             toggleTheme={toggleTheme}

@@ -9,16 +9,16 @@ import Tags from './pages/Tags/Tags'
 import Users from './pages/Users/Users'
 import UserProfile from './pages/UserProfile/UserProfile'
 
-const AllRoutes = ({ isDarkTheme, toggleTheme, slideIn, handleSlideIn }) => {
+const AllRoutes = ({ isDarkTheme, toggleTheme, slideIn, onCloseSidebar, handleSlideIn }) => {
   return (
     <Routes>
-        <Route path='/' element={<Home slideIn={slideIn}/>}/>
+        <Route path='/' element={<Home slideIn={slideIn} onClose={onCloseSidebar}/>}/>
         <Route path='/Auth' element={<Auth/>}/>
-        <Route path='/Questions' element={<Questions slideIn={slideIn}/>}/>
+        <Route path='/Questions' element={<Questions slideIn={slideIn} onClose={onCloseSidebar}/>}/>
         <Route path='/AskQuestion' element={<AskQuestion/>}/>
         <Route path='/Questions/:id' element={<DisplayQuestion/>}/>
-        <Route path="/Tags" element={<Tags slideIn={slideIn}/>}/>
-        <Route path="/Users" element={<Users slideIn={slideIn}/>}/>
+        <Route path="/Tags" element={<Tags slideIn={slideIn} onClose={onCloseSidebar}/>}/>
+        <Route path="/Users" element={<Users slideIn={slideIn} onClose={onCloseSidebar}/>}/>
         <Route
           path="/Users/:id"
           element={<UserProfile
@@ -26,6 +26,7 @@ const AllRoutes = ({ isDarkTheme, toggleTheme, slideIn, handleSlideIn }) => {
             toggleTheme={toggleTheme}
             slideIn={slideIn}
             handleSlideIn={handleSlideIn}
+            onClose={onCloseSidebar}
           />}
         />
     </Routes>

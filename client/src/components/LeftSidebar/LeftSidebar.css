@@ -1,14 +1,19 @@
 .left-sidebar{
     width: 164px;
     box-shadow: 0px 1px 0 rgba(0, 0, 0, 0.2);
-    transition: box-shadow ease-in-out 0.1s, transform ease-in-out 0.1s;
+    transition: box-shadow ease-in-out 0.25s, transform ease-in-out 0.4s, opacity ease-in-out 0.4s;
     transform: translateZ(0);
+    opacity: 1;
     box-sizing: border-box;
     font-size: 13px;
     position: fixed;
     height: 100%;
     background-color: var(--bg-clr);
     color: var(--font-clr);
+}
+
+.left-sidebar.closing {
+    opacity: 0.95;
 }
 .side-nav{
     height: auto;
@@ -47,16 +52,19 @@
     .left-sidebar {
       position: absolute;
       transform: translateX(-100%);
+      opacity: 0;
       z-index: 10;
-      transition: transform .3s ease;
+      transition: transform .35s cubic-bezier(0.25, 0.1, 0.25, 1), opacity .35s ease;
     }
 
     .left-sidebar.open {
       transform: translateX(0);
+      opacity: 1;
     }
 
     .left-sidebar.closed {
       transform: translateX(-100%);
+      opacity: 0;
     }
 
     .home-container-2 {

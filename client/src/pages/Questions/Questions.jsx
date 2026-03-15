@@ -6,10 +6,10 @@ import HomeMainbar from '../../components/HomeMainbar/HomeMainbar'
 
 
 
-const Questions = ({ slideIn }) => {
+const Questions = ({ slideIn, onClose }) => {
   return (
     <div  className='home-container-1'>
-        <LeftSidebar slideIn={slideIn}/>
+        <LeftSidebar slideIn={slideIn} onClose={onClose} />
         <div className='home-container-2'>
             <HomeMainbar/>
             <RightSidebar/>

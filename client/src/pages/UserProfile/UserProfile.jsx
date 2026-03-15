@@ -11,7 +11,7 @@ import ProfileBio from "./ProfileBio";
 import LoginHistory from "./LoginHistory";
 import "./UsersProfile.css";
 
-const UserProfile = ({ slideIn, handleSlideIn, isDarkTheme, toggleTheme }) => {
+const UserProfile = ({ slideIn, handleSlideIn, onClose, isDarkTheme, toggleTheme }) => {
   const { id } = useParams();
   const users = useSelector((state) => state.usersReducer);
   const currentProfile = users.filter((user) => user._id === id)[0];
@@ -28,7 +28,7 @@ const UserProfile = ({ slideIn, handleSlideIn, isDarkTheme, toggleTheme }) => {
 
   return (
     <div className="home-container-1">
-      <LeftSidebar slideIn={slideIn} handleSlideIn={handleSlideIn} />
+      <LeftSidebar slideIn={slideIn} onClose={onClose} handleSlideIn={handleSlideIn} />
       <div className="home-container-2">
         <section>
           <div className="user-details-container">
