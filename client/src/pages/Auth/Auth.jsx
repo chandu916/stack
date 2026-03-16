@@ -13,6 +13,8 @@ const Auth = () => {
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [authError, setAuthError] = useState('')
 
     const dispatch = useDispatch()
     const navigate  = useNavigate()
@@ -21,21 +23,31 @@ const Auth = () => {
         setIsSignup(!isSignup)
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-    
+        setAuthError('');
+
         if (!email || !password) {
-            alert('Enter email and password');
+            setAuthError('Enter email and password');
             return;
         }
         if (isSignup && !name) {
-            alert('Enter name to continue');
+            setAuthError('Enter name to continue');
             return;
         }
-        if (isSignup) {
-            dispatch(signup({ name, email, password }, navigate));
-        } else {
-            dispatch(login({ email, password }, navigate));
+
+        setLoading(true);
+        try {
+            if (isSignup) {
+                await dispatch(signup({ name, email, password }, navigate));
+            } else {
+                await dispatch(login({ email, password }, navigate));
+            }
+        } catch (error) {
+            setAuthError(error?.response?.data?.message || error.message || 'Failed to authenticate');
+            console.error('[AUTH] submit error', error);
+        } finally {
+            setLoading(false);
         }
     };
     
@@ -68,7 +80,15 @@ const Auth = () => {
                 { isSignup && <p style={{fontSize:'14px'}}> Passwords must contain at least eight characters, including at least 1 <br />letter and 1 number. </p>}
            
             </label>
-            <button type='submit' className='auth-btn cmn-btn'> { isSignup ? 'Sign up':'Log in' } </button>
+            <button type='submit' className='auth-btn cmn-btn' disabled={loading}>
+              {loading ? (
+                <span className='auth-loader' role='status' aria-live='polite'>Logging in...</span>
+              ) : (
+                isSignup ? 'Sign up' : 'Log in'
+              )}
+            </button>
+
+            {authError && <p className='auth-error'>{authError}</p>}
 
             {   isSignup && (
                     <p style={{fontSize:'13px', color:'rgb(99, 107, 116)'} }>

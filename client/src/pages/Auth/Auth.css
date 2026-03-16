@@ -67,6 +67,37 @@
     padding: 10px 5px;
     transition: .2s;
 }
+
+.auth-btn[disabled] {
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+
+.auth-loader {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.auth-loader::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-top-color: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.auth-error {
+    margin: 12px 0 0;
+    color: var(--error-color, #dc3545);
+    font-size: 13px;
+}
 .handle-switch-btn{
     background-color: transparent;
     color: var(--blue-300);
