@@ -29,7 +29,7 @@ export const updateProfile = (id, updateData) => async (dispatch) => {
       dispatch(setCurrentUser(updatedProfile));
     }
 
-    dispatch({ type: "UPDATE_CURRENT_USER", payload: data });
+    dispatch({ type: "UPDATE_CURRENT_USER", payload: updatedProfile || data });
 
     return data;
   } catch (error) {

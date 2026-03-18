@@ -1,0 +1,24 @@
+# Node modules
+node_modules/
+
+# Playwright reports, traces and videos
+playwright-report/
+test-results/
+**/playwright-report/
+**/test-results/
+
+# Playwright internal browser cache
+/Users/**/Library/Caches/ms-playwright/
+**/playwright/.cache
+
+# Environment variable files
+.env
+
+# Generated result files
+*.log
+*.trace
+video/
+
+# OS files
+.DS_Store
+Thumbs.db

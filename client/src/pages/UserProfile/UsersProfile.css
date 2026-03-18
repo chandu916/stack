@@ -10,6 +10,14 @@
     display: flex;
     align-items: flex-start;
   }
+
+  .profile-photo {
+    width: 96px;
+    height: 96px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #6e7c8a;
+  }
   
   .user-name {
     padding-left: 20px;

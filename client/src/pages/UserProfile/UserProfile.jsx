@@ -14,8 +14,8 @@ import "./UsersProfile.css";
 const UserProfile = ({ slideIn, handleSlideIn, onClose, isDarkTheme, toggleTheme }) => {
   const { id } = useParams();
   const users = useSelector((state) => state.usersReducer);
-  const currentProfile = users.filter((user) => user._id === id)[0];
   const currentUser = useSelector((state) => state.currentUserReducer);
+  const currentProfile = users.find((user) => user._id === id) || currentUser?.result || null;
   const [Switch, setSwitch] = useState(false);
 
   const safeSetEditProfile = useSafeCallback(() => setSwitch('editProfile'), 'UserProfile Edit Profile');
@@ -33,15 +33,23 @@ const UserProfile = ({ slideIn, handleSlideIn, onClose, isDarkTheme, toggleTheme
         <section>
           <div className="user-details-container">
             <div className="user-details">
-              <Avatar
-                backgroundColor="purple"
-                color="white"
-                fontSize="50px"
-                px="40px"
-                py="30px"
-              >
-                {currentProfile?.name ? currentProfile.name.charAt(0).toUpperCase() : 'U'}
-              </Avatar>
+              {currentProfile?.profilePhoto ? (
+                <img
+                  className="profile-photo"
+                  src={currentProfile.profilePhoto}
+                  alt={`${currentProfile.name || 'User'} avatar`}
+                />
+              ) : (
+                <Avatar
+                  backgroundColor="purple"
+                  color="white"
+                  fontSize="50px"
+                  px="40px"
+                  py="30px"
+                >
+                  {currentProfile?.name ? currentProfile.name.charAt(0).toUpperCase() : 'U'}
+                </Avatar>
+              )}
               <div className="user-name">
                 <h1>{currentProfile?.name || 'Unknown'}</h1>
                 <p>

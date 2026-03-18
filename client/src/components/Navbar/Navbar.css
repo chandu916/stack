@@ -93,6 +93,39 @@
     left: 25px;
     top: 8px;
   }
+
+  .search-suggestions {
+    position: absolute;
+    top: 38px;
+    left: 12px;
+    right: 12px;
+    list-style: none;
+    margin: 0;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--nav-bg);
+    z-index: 20;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .search-suggestions li button {
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    color: var(--font-clr);
+    padding: 7px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: lowercase;
+  }
+
+  .search-suggestions li button:hover,
+  .search-suggestions li button.active {
+    background-color: var(--nav-hvr);
+    outline: none;
+  }
   
   .nav-links {
     padding: 7px 13px;

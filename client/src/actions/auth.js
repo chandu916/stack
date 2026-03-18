@@ -23,7 +23,37 @@ export const login = (authData, navigate) => async (dispatch) => {
         navigate('/');
         return data;
     } catch (error) {
-        console.error('[AUTH] login failed', error);
+        console.error('[AUTH] login failed', {
+          message: error?.message,
+          status: error?.response?.status,
+          body: error?.response?.data,
+        });
+        throw error;
+    }
+};
+
+export const refreshAuthToken = () => async (dispatch) => {
+    try {
+        const { data } = await api.refreshToken();
+        const storedProfile = JSON.parse(localStorage.getItem('Profile'));
+        if (!storedProfile || !storedProfile.result) {
+            return null;
+        }
+
+        const updatedProfile = {
+            ...storedProfile,
+            token: data.token,
+        };
+
+        dispatch({ type: 'AUTH', data: updatedProfile });
+        dispatch(setCurrentUser(updatedProfile));
+        return updatedProfile;
+    } catch (error) {
+        console.error('[AUTH] refresh token failed', {
+            message: error?.message,
+            status: error?.response?.status,
+            body: error?.response?.data,
+        });
         throw error;
     }
 };

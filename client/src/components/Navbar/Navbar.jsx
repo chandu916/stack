@@ -1,32 +1,233 @@
-import React, { useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useCallback, useMemo, useRef, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { jwtDecode } from 'jwt-decode';
 import Avatar from '../../components/Avatar/Avatar';
+import { refreshAuthToken } from '../../actions/auth';
 import { setCurrentUser } from '../../actions/currentUser';
+import { tagsList } from '../../pages/Tags/tagList';
 import './Navbar.css';
+
+const INACTIVITY_LIMIT_MS = 5 * 60 * 1000;
+const REFRESH_INTERVAL_MS = 4 * 60 * 1000;
+const LAST_ACTIVITY_KEY = 'last-activity-ts';
+
+const getEditDistance = (a, b) => {
+  const left = String(a || '').toLowerCase();
+  const right = String(b || '').toLowerCase();
+
+  if (!left) return right.length;
+  if (!right) return left.length;
+
+  const table = Array.from({ length: left.length + 1 }, () => Array(right.length + 1).fill(0));
+
+  for (let i = 0; i <= left.length; i += 1) table[i][0] = i;
+  for (let j = 0; j <= right.length; j += 1) table[0][j] = j;
+
+  for (let i = 1; i <= left.length; i += 1) {
+    for (let j = 1; j <= right.length; j += 1) {
+      const cost = left[i - 1] === right[j - 1] ? 0 : 1;
+      table[i][j] = Math.min(
+        table[i - 1][j] + 1,
+        table[i][j - 1] + 1,
+        table[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return table[left.length][right.length];
+};
 
 const Navbar = ({ handleSlideIn }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const User = useSelector((state) => state.currentUserReducer);
+  const questions = useSelector((state) => state.questionReducer?.data || []);
+  const lastRefreshRef = useRef(0);
+  const [searchText, setSearchText] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
 
-  const handleLogout = useCallback(() => {
+  const searchableTerms = useMemo(() => {
+    const terms = new Set();
+
+    tagsList.forEach((tag) => {
+      terms.add(String(tag.tagName || '').toLowerCase());
+    });
+
+    questions.forEach((question) => {
+      (question.questionTags || []).forEach((tag) => {
+        terms.add(String(tag || '').toLowerCase());
+      });
+
+      String(question.questionTitle || '')
+        .toLowerCase()
+        .split(/[^a-z0-9+#.]+/)
+        .filter((word) => word.length > 2)
+        .forEach((word) => terms.add(word));
+    });
+
+    return Array.from(terms).filter(Boolean).slice(0, 1200);
+  }, [questions]);
+
+  const searchSuggestions = useMemo(() => {
+    const query = searchText.trim().toLowerCase();
+    if (query.length < 2) return [];
+
+    const maxDistance = Math.max(2, Math.floor(query.length / 3));
+
+    return searchableTerms
+      .map((term) => {
+        let score = 0;
+        if (term === query) {
+          score = 0;
+        } else if (term.startsWith(query)) {
+          score = 0.25;
+        } else if (term.includes(query)) {
+          score = 0.5;
+        } else {
+          score = getEditDistance(term, query);
+        }
+
+        return {
+          term,
+          score,
+        };
+      })
+      .filter((entry) => entry.term.includes(query) || entry.score <= maxDistance)
+      .sort((a, b) => a.score - b.score || a.term.length - b.term.length)
+      .slice(0, 6)
+      .map((entry) => entry.term);
+  }, [searchText, searchableTerms]);
+
+  const handleLogout = useCallback((reason = 'manual') => {
     dispatch({ type: 'LOGOUT' });
-    navigate('/Auth');
+    localStorage.removeItem(LAST_ACTIVITY_KEY);
+    const logoutMessage = reason === 'inactive'
+      ? 'You were logged out after 5 minutes of inactivity. Please log in again.'
+      : reason === 'expired'
+        ? 'Your session expired. Please log in again.'
+        : null;
+
+    navigate('/Auth', { state: logoutMessage ? { logoutMessage } : undefined });
     dispatch(setCurrentUser(null));
   }, [dispatch, navigate]);
 
   useEffect(() => {
+    dispatch(setCurrentUser(JSON.parse(localStorage.getItem('Profile'))));
+  }, [dispatch]);
+
+  useEffect(() => {
     const token = User?.token;
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      if (decodedToken.exp * 1000 < new Date().getTime()) {
+    if (!token) return undefined;
+
+    const validateToken = () => {
+      try {
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.exp * 1000 < Date.now()) {
+          handleLogout();
+        }
+      } catch (error) {
         handleLogout();
       }
+    };
+
+    validateToken();
+    const tokenInterval = setInterval(validateToken, 10000);
+
+    return () => clearInterval(tokenInterval);
+  }, [User?.token, handleLogout]);
+
+  useEffect(() => {
+    const token = User?.token;
+    if (!token) return undefined;
+
+    lastRefreshRef.current = Date.now();
+
+    const updateLastActivity = () => {
+      localStorage.setItem(LAST_ACTIVITY_KEY, String(Date.now()));
+    };
+
+    // Reset timestamp at session start to avoid stale values from older sessions.
+    updateLastActivity();
+
+    const handleUserActivity = () => {
+      updateLastActivity();
+    };
+
+    const events = ['click', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+    events.forEach((eventName) => window.addEventListener(eventName, handleUserActivity, { passive: true }));
+
+    const interval = setInterval(async () => {
+      const lastActivityRaw = Number(localStorage.getItem(LAST_ACTIVITY_KEY) || Date.now());
+      const now = Date.now();
+      const inactivityMs = Math.max(0, now - lastActivityRaw);
+
+      if (inactivityMs >= INACTIVITY_LIMIT_MS) {
+        handleLogout('inactive');
+        return;
+      }
+
+      if (now - lastRefreshRef.current >= REFRESH_INTERVAL_MS) {
+        try {
+          await dispatch(refreshAuthToken());
+          lastRefreshRef.current = now;
+        } catch (error) {
+          handleLogout('expired');
+        }
+      }
+    }, 15000);
+
+    return () => {
+      clearInterval(interval);
+      events.forEach((eventName) => window.removeEventListener(eventName, handleUserActivity));
+    };
+  }, [User?.token, dispatch, handleLogout]);
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const q = queryParams.get('q') || '';
+    if (location.pathname === '/Search') {
+      setSearchText(q);
     }
-    dispatch(setCurrentUser(JSON.parse(localStorage.getItem('Profile'))));
-  }, [User?.token, handleLogout, dispatch]);
+  }, [location.pathname, location.search]);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setShowSuggestions(false);
+    setActiveIndex(-1);
+    const value = activeIndex >= 0 ? searchSuggestions[activeIndex] : searchText.trim();
+    if (!value) {
+      navigate('/Search');
+      return;
+    }
+    navigate(`/Search?q=${encodeURIComponent(value)}`);
+  };
+
+  const handleSuggestionSelect = (suggestion) => {
+    setSearchText(suggestion);
+    setShowSuggestions(false);
+    setActiveIndex(-1);
+    navigate(`/Search?q=${encodeURIComponent(suggestion)}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || searchSuggestions.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActiveIndex((prev) => Math.min(prev + 1, searchSuggestions.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActiveIndex((prev) => Math.max(prev - 1, -1));
+    } else if (e.key === 'Enter' && activeIndex >= 0) {
+      e.preventDefault();
+      handleSuggestionSelect(searchSuggestions[activeIndex]);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      setActiveIndex(-1);
+    }
+  };
 
   return (
     <nav className="main-nav">
@@ -48,15 +249,44 @@ const Navbar = ({ handleSlideIn }) => {
           <Link to="/" className="nav-items nav-btn res-nav">
             About
           </Link>
-          <Link to="/" className="nav-items nav-btn res-nav">
+          <Link to="/Products" className="nav-items nav-btn res-nav">
             Products
           </Link>
-          <Link to="/" className="nav-items nav-btn res-nav">
+          <Link to="/ForTeams" className="nav-items nav-btn res-nav">
             For Teams
           </Link>
-          <form>
-            <input type="text" placeholder="Search..." />
+          <form onSubmit={handleSearchSubmit}>
+            <input
+              type="text"
+              placeholder="Search questions and tags..."
+              value={searchText}
+              onFocus={() => setShowSuggestions(true)}
+              onBlur={() => setTimeout(() => { setShowSuggestions(false); setActiveIndex(-1); }, 120)}
+              onKeyDown={handleKeyDown}
+              onChange={(e) => {
+                setSearchText(e.target.value);
+                setShowSuggestions(true);
+                setActiveIndex(-1);
+              }}
+            />
             <svg xmlns="http://www.w3.org/2000/svg" className='search-icon icons' viewBox="0 0 512 512"><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"/></svg>
+            {showSuggestions && searchSuggestions.length > 0 && (
+              <ul className='search-suggestions' role='listbox'>
+                {searchSuggestions.map((suggestion, idx) => (
+                  <li key={suggestion} role='option' aria-selected={idx === activeIndex}>
+                    <button
+                      type='button'
+                      className={idx === activeIndex ? 'active' : ''}
+                      onMouseDown={(e) => e.preventDefault()}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      onClick={() => handleSuggestionSelect(suggestion)}
+                    >
+                      {suggestion}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </form>
         </div>
         <div className="navbar-2">

@@ -1,6 +1,6 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useDispatch} from 'react-redux'
-import {useNavigate} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
 import './Auth.css'
 import icon from '../../assets/icon.png'
 import AboutAuth from './AboutAuth'
@@ -15,9 +15,18 @@ const Auth = () => {
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
     const [authError, setAuthError] = useState('')
+    const [logoutInfo, setLogoutInfo] = useState('')
 
     const dispatch = useDispatch()
     const navigate  = useNavigate()
+    const location = useLocation()
+
+    useEffect(() => {
+        if (location.state?.logoutMessage) {
+            setLogoutInfo(location.state.logoutMessage)
+            navigate(location.pathname, { replace: true, state: null })
+        }
+    }, [location.state, location.pathname, navigate])
 
     const handleSwitch = () =>{
         setIsSignup(!isSignup)
@@ -26,6 +35,7 @@ const Auth = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setAuthError('');
+        setLogoutInfo('');
 
         if (!email || !password) {
             setAuthError('Enter email and password');
@@ -60,6 +70,7 @@ const Auth = () => {
             { !isSignup && <img src={icon} alt='stack overflow' className='login-logo'/>}
 
              <form onSubmit={handleSubmit}>
+                     {logoutInfo && <div className='auth-info'>{logoutInfo}</div>}
                 { isSignup && (
                     <label htmlFor='name'>
                         <h4>Display Name</h4>

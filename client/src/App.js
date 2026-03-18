@@ -18,23 +18,15 @@ function App() {
   }, [dispatch]);
 
   const [slideIn, setSlideIn] = useState(true);
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    const savedTheme = localStorage.getItem('site-theme');
+    if (savedTheme === 'light') return false;
+    return true; // default dark
+  });
 
   useEffect(() => {
     if (window.innerWidth <= 760) {
       setSlideIn(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('site-theme');
-    if (savedTheme === 'dark') {
-      setIsDarkTheme(true);
-    } else if (savedTheme === 'light') {
-      setIsDarkTheme(false);
-    } else {
-      const currentTime = new Date().getHours();
-      setIsDarkTheme(currentTime < 6 || currentTime >= 18);
     }
   }, []);
 

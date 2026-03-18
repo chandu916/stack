@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useParams,Link, useNavigate, useLocation} from 'react-router-dom'
 import {useSelector,useDispatch} from 'react-redux'
 import moment from 'moment'
@@ -9,6 +9,7 @@ import './Questions.css'
 import Avatar from '../../components/Avatar/Avatar'
 import DisplayAnswer from './DisplayAnswer'
 import {postAnswer, deleteQuestion, voteQuestion} from '../../actions/question'
+import { isQuestionSaved, toggleSavedQuestion } from '../../utils/savedQuestions'
 
 const QuestionsDetails = () => {
 
@@ -20,6 +21,11 @@ const QuestionsDetails = () => {
     const User = useSelector((state) => (state.currentUserReducer))
     const location = useLocation()
     const url = 'http://localhost:3000' 
+    const [saved, setSaved] = useState(() => isQuestionSaved(id));
+
+    useEffect(() => {
+        setSaved(isQuestionSaved(id));
+    }, [id]);
 
     const handlePostAns = (e, answerLength) =>{
         e.preventDefault();
@@ -47,6 +53,11 @@ const QuestionsDetails = () => {
 
     const handleDelete = ()=>{
         dispatch(deleteQuestion(id, navigate))
+    }
+
+    const handleToggleSave = () => {
+        const nextState = toggleSavedQuestion(id);
+        setSaved(nextState);
     }
 
     const handleUpVote = ()=>{
@@ -91,6 +102,7 @@ const QuestionsDetails = () => {
                                     <div className="question-actions-user">
                                         <div>
                                             <button type='button' onClick={handleShare}>share</button> 
+                                            <button type='button' onClick={handleToggleSave}>{saved ? 'Unsave' : 'Save'}</button>
                                             {
                                                 User?.result?._id === question?.userId && (
                                                     <button type='button' onClick={handleDelete}>Delete</button>

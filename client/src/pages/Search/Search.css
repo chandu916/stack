@@ -1,0 +1,65 @@
+.search-page {
+  margin-top: 25px;
+}
+
+.search-page h1 {
+  margin: 0;
+  font-weight: 400;
+}
+
+.search-subtitle {
+  margin: 10px 0 20px;
+  opacity: 0.85;
+}
+
+.search-section {
+  margin-bottom: 26px;
+}
+
+.search-section h2 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.search-list {
+  display: grid;
+  gap: 12px;
+}
+
+.search-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.search-title {
+  color: var(--qs-clr);
+  text-decoration: none;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.search-tags {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.search-tag {
+  background-color: #e1ecf4;
+  color: #39739d;
+  font-size: 12px;
+  border-radius: 3px;
+  padding: 4px 8px;
+}
+
+.search-tag-title {
+  margin: 0 0 8px;
+  font-weight: 500;
+}
+
+.search-card p {
+  margin: 0 0 8px;
+  line-height: 1.45;
+}

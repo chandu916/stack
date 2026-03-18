@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import moment from 'moment'
+import { isQuestionSaved, toggleSavedQuestion } from '../../utils/savedQuestions'
 
 const Questions = ({question}) => {
   const votes = question.upVote.length - question.downVote.length;
+  const [saved, setSaved] = useState(() => isQuestionSaved(question._id));
+
+  const handleToggleSave = () => {
+    const nextState = toggleSavedQuestion(question._id);
+    setSaved(nextState);
+  };
+
   return (
     <div className='display-question-container'>
         <div className='display-votes-ans'>
@@ -25,6 +33,13 @@ const Questions = ({question}) => {
                          ))
                     }
                 </div>
+                  <button
+                    type='button'
+                    className='edit-question-btn'
+                    onClick={handleToggleSave}
+                  >
+                    {saved ? 'Unsave' : 'Save'}
+                  </button>
                    <p className='display-time'>
                    { question.userPosted} asked {moment(question.askedon).format('MMM-D-YYYY')}
                     </p>
